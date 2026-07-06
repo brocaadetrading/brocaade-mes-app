@@ -1,9 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import helmet from 'helmet';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import bcryptjs from 'bcryptjs';
 import pkg from 'pg';
 import fs from 'fs';
 import path from 'path';
@@ -15,18 +13,18 @@ dotenv.config();
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Middleware - FIXED CSP
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https:"]
-    }
-  }
-}));
+// ============================================================================
+// SECURITY HEADERS - NO CSP
+// ============================================================================
+
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
@@ -65,7 +63,6 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Demo users
     const demoUsers = {
       'owner@brocaade.com': { id: 1, email: 'owner@brocaade.com', role: 'owner', password: 'SecurePass123!' },
       'design@brocaade.com': { id: 2, email: 'design@brocaade.com', role: 'design_head', password: 'DesignPass123!' },
@@ -91,7 +88,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // ============================================================================
-// PROTECTED ROUTES - REQUIRE JWT
+// PROTECTED ROUTES
 // ============================================================================
 
 const verifyToken = (req, res, next) => {
