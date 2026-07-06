@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "public": ".",
-  "builds": [],
   "routes": [
     {
       "src": "/api/(.*)",
