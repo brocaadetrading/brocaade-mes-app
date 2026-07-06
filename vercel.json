@@ -1,15 +1,19 @@
 {
   "version": 2,
-  "buildCommand": "mkdir -p public && cp frontend.html public/index.html && cp frontend.html public/frontend.html",
-  "outputDirectory": "public",
+  "public": ".",
+  "builds": [],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/server.js"
     },
     {
+      "src": "/frontend.html",
+      "dest": "/frontend.html"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/server.js"
     }
   ]
 }
