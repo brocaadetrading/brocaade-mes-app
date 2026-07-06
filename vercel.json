@@ -8,20 +8,17 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/frontend.html",
+      "dest": "/frontend.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "server.js"
     }
   ],
-  "env": {
-    "DB_HOST": "@db_host",
-    "DB_PORT": "@db_port",
-    "DB_USER": "@db_user",
-    "DB_PASSWORD": "@db_password",
-    "DB_NAME": "@db_name",
-    "JWT_SECRET": "@jwt_secret",
-    "CLOUDINARY_CLOUD_NAME": "@cloudinary_cloud_name",
-    "CLOUDINARY_API_KEY": "@cloudinary_api_key",
-    "CLOUDINARY_API_SECRET": "@cloudinary_api_secret",
-    "NODE_ENV": "production"
-  }
+  "public": true
 }
